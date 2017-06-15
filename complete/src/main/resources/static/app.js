@@ -5,11 +5,14 @@ function setConnected(connected) {
     $("#disconnect").prop("disabled", !connected);
     if (connected) {
         $("#conversation").show();
+        $("#ageConversation").show();
     }
     else {
         $("#conversation").hide();
+        $("#ageConversation").hide();
     }
     $("#greetings").html("");
+//    $("#age").html("");
 }
 
 function connect() {
@@ -20,6 +23,9 @@ function connect() {
         console.log('Connected: ' + frame);
         stompClient.subscribe('/topic/greetings', function (greeting) {
             showGreeting(JSON.parse(greeting.body).content);
+        });
+        stompClient.subscribe('/topic/age', function (greeting) {
+            showAge(JSON.parse(greeting.body).content);
         });
     });
 }
@@ -40,8 +46,16 @@ function sendSurName() {
     stompClient.send("/app/helloagain", {}, JSON.stringify({'name': $("#surname").val()}));
 }
 
+function sendAge() {
+    stompClient.send("/app/age", {}, JSON.stringify({'name': $("#age").val()}));
+}
+
 function showGreeting(message) {
     $("#greetings").append("<tr><td>" + message + "</td></tr>");
+}
+
+function showAge(message) {
+    $("#ageArea").append("<tr><td>" + message + "</td></tr>");
 }
 
 $(function () {
@@ -52,6 +66,7 @@ $(function () {
     $( "#disconnect" ).click(function() { disconnect(); });
     $( "#send" ).click(function() { sendName(); });
     $( "#sendsurname" ).click(function() { sendSurName(); });
+    $( "#sendage" ).click(function() { sendAge(); });
 });
 
 

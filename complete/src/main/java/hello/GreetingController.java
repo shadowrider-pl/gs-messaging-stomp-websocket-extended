@@ -31,14 +31,18 @@ public class GreetingController {
     @SubscribeMapping("/helloagain")
     @SendTo("/topic/greetings")
     public Greeting greetingAgain(HelloMessage message) throws Exception {
-//        Thread.sleep(100); // simulated delay
-
 //        greetingAuto(message);
-//        Thread.sleep(1000); // simulated delay
         broadcastMess(message);
         Thread.sleep(1000); // simulated delay
         System.out.println("HelloMessage again message "+ message.getName());
         return new Greeting("Hello again, " + message.getName() + "!");
+    }
+
+    @SubscribeMapping("/age")
+    @SendTo("/topic/age")
+    public Greeting greetingAge(HelloMessage message) throws Exception {
+        System.out.println("HelloMessage age "+ message.getName());
+        return new Greeting(message.getName() + "? Are you really so old?");
     }
 
 
